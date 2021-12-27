@@ -5,10 +5,10 @@ data "aws_route53_zone" "selected" {
 
 data "aws_elb_hosted_zone_id" "main" {}
 
-data "kubernetes_ingress" "learngo" {
+data "kubernetes_service" "istio_ingress_gateway" {
   metadata {
-    name = "learngo"
-    namespace = "learngo"
+    name        = "istio-ingressgateway"
+    namespace   = "istio-system"
   }
 }
 
@@ -18,7 +18,7 @@ resource "aws_route53_record" "api_record" {
   type    = "A"
 
   alias {
-    name                   = kubernetes_ingress.learngo.status.0.load_balancer.0.ingress.0.hostname
+    name                   = data.kubernetes_service.istio_ingress_gateway.status.0.load_balancer[0].ingress.0.hostname
     zone_id                = data.aws_elb_hosted_zone_id.main.id
     evaluate_target_health = true
   }

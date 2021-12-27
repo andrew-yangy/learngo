@@ -8,6 +8,7 @@ resource "kubernetes_namespace" "learngo" {
   metadata {
     labels = {
       name = "learngo"
+      "istio-injection" = "enabled"
     }
 
     name = "learngo"
@@ -58,38 +59,12 @@ resource "kubernetes_service" "learngo" {
     name = var.k8s_name
   }
   spec {
-    type = "NodePort"
     selector = {
       name = var.k8s_name
     }
     port {
       port        = 80
       target_port = var.k8s_image.containerPort
-    }
-  }
-}
-
-resource "kubernetes_ingress" "learngo" {
-  metadata {
-    namespace = var.k8s_namespace
-    name = var.k8s_name
-    annotations = {
-      "alb.ingress.kubernetes.io/scheme" = "internet-facing"
-      "kubernetes.io/ingress.class" = "alb"
-    }
-  }
-
-  spec {
-    rule {
-      http {
-        path {
-          path = "/*"
-          backend {
-            service_name = var.k8s_name
-            service_port = 80
-          }
-        }
-      }
     }
   }
 }
@@ -102,22 +77,8 @@ provider "helm" {
   }
 }
 
-resource "helm_release" "alb-ingress" {
-  name       = "alb-ingress"
-  namespace  = var.k8s_namespace
-  chart      = "aws-alb-ingress-controller"
-  repository = "https://cloudnativeapp.github.io/charts/curated/"
-
-  set {
-    name  = "autoDiscoverAwsRegion"
-    value = "true"
-  }
-  set {
-    name  = "autoDiscoverAwsVpcID"
-    value = "true"
-  }
-  set {
-    name  = "clusterName"
-    value = local.cluster_name
-  }
+resource "helm_release" "istio" {
+  name       = "learngo-istio"
+  namespace  = "istio-system"
+  chart      = "./kube"
 }

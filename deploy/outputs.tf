@@ -34,7 +34,7 @@ output "cluster_name" {
 }
 
 output "load_balancer_hostname" {
-  value = kubernetes_ingress.learngo.status.0.load_balancer.0.ingress.0.hostname
+  value = data.kubernetes_service.istio_ingress_gateway.status.0.load_balancer.0.ingress.0.hostname
 }
 
 output "load_balancer_zone_id" {
