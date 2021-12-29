@@ -1,8 +1,4 @@
-bazel-gazelle
-bazel-bin
-bazel-learngo
-bazel-out
-bazel-testlogs
+/bazel-*
 
 # Local .terraform directories
 **/.terraform/*

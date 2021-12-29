@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importpath = "github.com/ddvkid/learngo/services/order",
+    visibility = ["//visibility:private"],
+    deps = ["//vendor/github.com/gin-gonic/gin:go_default_library"],
+)
+
+go_binary(
+    name = "order",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
+
+container_image(
+    name = "image",
+    base = "@alpine_linux_amd64//image",
+    entrypoint = ["/order"],
+    files = [":order"],
+)
+
+container_push(
+    name = "image-push",
+    format = "Docker",
+    image = ":image",
+    registry = "270878775604.dkr.ecr.us-east-2.amazonaws.com",
+    repository = "order",
+)

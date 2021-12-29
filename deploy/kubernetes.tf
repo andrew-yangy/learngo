@@ -25,7 +25,7 @@ resource "kubernetes_deployment" "learngo" {
   }
 
   spec {
-    replicas = 2
+    replicas = var.k8s_replicaCount
 
     selector {
       match_labels = {
@@ -43,10 +43,14 @@ resource "kubernetes_deployment" "learngo" {
       spec {
         container {
           image = var.k8s_image.repository
-          name  = "app"
+          name  = var.k8s_name
+          image_pull_policy = "Always"
           port {
             container_port = var.k8s_image.containerPort
           }
+        }
+        image_pull_secrets {
+          name = "ecr-secret"
         }
       }
     }
@@ -57,13 +61,18 @@ resource "kubernetes_service" "learngo" {
   metadata {
     namespace = var.k8s_namespace
     name = var.k8s_name
+    labels = {
+      app = var.k8s_name
+      service = var.k8s_name
+    }
   }
   spec {
     selector = {
       name = var.k8s_name
     }
     port {
-      port        = 80
+      name = "http"
+      port = 80
       target_port = var.k8s_image.containerPort
     }
   }
@@ -79,6 +88,9 @@ provider "helm" {
 
 resource "helm_release" "istio" {
   name       = "learngo-istio"
-  namespace  = "istio-system"
+  namespace = var.k8s_namespace
   chart      = "./kube"
+  depends_on = [
+    kubernetes_service.learngo,
+  ]
 }

@@ -26,3 +26,7 @@ variable "k8s_image" {
     containerPort = number
   })
 }
+
+variable "image_registry" {
+  type = string
+}
