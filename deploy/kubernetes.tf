@@ -21,6 +21,7 @@ resource "kubernetes_deployment" "learngo" {
     name = var.k8s_name
     labels = {
       app = var.k8s_name
+      version: "v1"
     }
   }
 
@@ -29,14 +30,16 @@ resource "kubernetes_deployment" "learngo" {
 
     selector {
       match_labels = {
-        name = var.k8s_name
+        app = var.k8s_name
+        version: "v1"
       }
     }
 
     template {
       metadata {
         labels = {
-          name = var.k8s_name
+          app = var.k8s_name
+          version: "v1"
         }
       }
 
@@ -44,7 +47,7 @@ resource "kubernetes_deployment" "learngo" {
         container {
           image = var.k8s_image.repository
           name  = var.k8s_name
-          image_pull_policy = "Always"
+          image_pull_policy = "IfNotPresent"
           port {
             container_port = var.k8s_image.containerPort
           }
@@ -68,7 +71,8 @@ resource "kubernetes_service" "learngo" {
   }
   spec {
     selector = {
-      name = var.k8s_name
+      app = var.k8s_name
+      version: "v1"
     }
     port {
       name = "http"
