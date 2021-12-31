@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "order" {
-  name = "order"
+  name = var.app_name
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -10,8 +10,9 @@ resource "aws_ecr_repository" "order" {
 data "aws_ecr_authorization_token" "token" {
 }
 
-resource "kubernetes_secret" "secret" {
+resource "kubernetes_secret" this {
   metadata {
+    namespace = var.k8s_namespace
     name = "ecr-secret"
   }
 
@@ -26,4 +27,7 @@ resource "kubernetes_secret" "secret" {
   }
 
   type = "kubernetes.io/dockerconfigjson"
+  lifecycle {
+    ignore_changes = [data]
+  }
 }

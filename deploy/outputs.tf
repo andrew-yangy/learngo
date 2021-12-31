@@ -36,7 +36,3 @@ output "cluster_name" {
 output "load_balancer_hostname" {
   value = data.kubernetes_service.istio_ingress_gateway.status.0.load_balancer.0.ingress.0.hostname
 }
-
-output "load_balancer_zone_id" {
-  value = data.aws_elb_hosted_zone_id.main.id
-}

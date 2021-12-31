@@ -7,78 +7,11 @@ provider "kubernetes" {
 resource "kubernetes_namespace" "learngo" {
   metadata {
     labels = {
-      name = "learngo"
+      name = var.k8s_namespace
       "istio-injection" = "enabled"
     }
 
-    name = "learngo"
-  }
-}
-
-resource "kubernetes_deployment" "learngo" {
-  metadata {
-    namespace = var.k8s_namespace
-    name = var.k8s_name
-    labels = {
-      app = var.k8s_name
-      version: "v1"
-    }
-  }
-
-  spec {
-    replicas = var.k8s_replicaCount
-
-    selector {
-      match_labels = {
-        app = var.k8s_name
-        version: "v1"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app = var.k8s_name
-          version: "v1"
-        }
-      }
-
-      spec {
-        container {
-          image = var.k8s_image.repository
-          name  = var.k8s_name
-          image_pull_policy = "IfNotPresent"
-          port {
-            container_port = var.k8s_image.containerPort
-          }
-        }
-        image_pull_secrets {
-          name = "ecr-secret"
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_service" "learngo" {
-  metadata {
-    namespace = var.k8s_namespace
-    name = var.k8s_name
-    labels = {
-      app = var.k8s_name
-      service = var.k8s_name
-    }
-  }
-  spec {
-    selector = {
-      app = var.k8s_name
-      version: "v1"
-    }
-    port {
-      name = "http"
-      port = 80
-      target_port = var.k8s_image.containerPort
-    }
+    name = var.k8s_namespace
   }
 }
 
@@ -90,11 +23,31 @@ provider "helm" {
   }
 }
 
+locals {
+  chartHash = sha1(join("", [for f in fileset("./kube", "**/*.yaml"): filesha1("./kube/${f}")]))
+}
+
 resource "helm_release" "istio" {
   name       = "learngo-istio"
   namespace = var.k8s_namespace
   chart      = "./kube"
-  depends_on = [
-    kubernetes_service.learngo,
-  ]
+
+  set {
+    name  = "chart hash"
+    value = local.chartHash
+  }
+}
+
+module "order_service" {
+  source = "./modules/learngo-services"
+
+  app_name = "order"
+  k8s_namespace = var.k8s_namespace
+  k8s_name = "order-api"
+  k8s_replicaCount = 2
+  k8s_image = {
+    repository="${var.image_registry}/order:latest"
+    containerPort=8080
+  }
+  image_registry = var.image_registry
 }
