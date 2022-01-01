@@ -1,3 +1,13 @@
+resource "kubernetes_service_account" this {
+  metadata {
+    namespace = var.k8s_namespace
+    name = var.k8s_name
+  }
+  image_pull_secret {
+    name = kubernetes_secret.this.metadata[0].name
+  }
+}
+
 resource "kubernetes_deployment" this {
   metadata {
     namespace = var.k8s_namespace
@@ -27,6 +37,7 @@ resource "kubernetes_deployment" this {
       }
 
       spec {
+        service_account_name = kubernetes_service_account.this.metadata[0].name
         container {
           image = var.k8s_image.repository
           name  = var.k8s_name
@@ -34,9 +45,6 @@ resource "kubernetes_deployment" this {
           port {
             container_port = var.k8s_image.containerPort
           }
-        }
-        image_pull_secrets {
-          name = kubernetes_secret.this.metadata[0].name
         }
       }
     }
