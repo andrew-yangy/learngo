@@ -36,7 +36,7 @@ jobs:
         run: bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //services/order:image-push
 
   deploy-stage:
-    needs: build
+    needs: build-and-publish
     runs-on: ubuntu-latest
     environment: stage
     defaults:
