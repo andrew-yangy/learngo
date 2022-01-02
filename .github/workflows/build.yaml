@@ -18,5 +18,5 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Build
-        run: bazel build //services/order
+      - name: Build and Push to ECR
+        run: bazel build //services/order:image-push
