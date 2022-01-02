@@ -2,7 +2,7 @@ name: Build
 on:
   push:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened]
 
 env:
   AWS_REGION: us-east-2
@@ -109,3 +109,7 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_CLI_ARGS: '-var-file="stage.tfvars"'
