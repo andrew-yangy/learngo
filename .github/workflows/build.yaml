@@ -33,4 +33,4 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build and Push to ECR
-        run: bazel run //services/order:image-push
+        run: bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //services/order:image-push
