@@ -4,7 +4,7 @@ on: [push, pull_request]
 env:
   AWS_REGION: us-east-2
 jobs:
-  build:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Cache bazelisk download
@@ -35,9 +35,10 @@ jobs:
       - name: Build and Push to ECR
         run: bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //services/order:image-push
 
-  release:
+  deploy-stage:
     needs: build
     runs-on: ubuntu-latest
+    environment: stage
     defaults:
       run:
         working-directory: deploy
@@ -60,7 +61,6 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request'
         run: terraform plan -no-color
         continue-on-error: true
 
