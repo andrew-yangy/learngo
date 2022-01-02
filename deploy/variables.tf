@@ -5,7 +5,7 @@ variable "region" {
 
 variable "environment" {
   default = "stage"
-  type = string
+  type    = string
 }
 
 variable "k8s_namespace" {
