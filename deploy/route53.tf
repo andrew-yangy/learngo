@@ -7,8 +7,8 @@ data "aws_elb_hosted_zone_id" "main" {}
 
 data "kubernetes_service" "istio_ingress_gateway" {
   metadata {
-    name        = "istio-ingressgateway"
-    namespace   = "istio-system"
+    name      = "istio-ingressgateway"
+    namespace = "istio-system"
   }
   depends_on = [
     helm_release.istio,

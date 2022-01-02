@@ -12,6 +12,10 @@ func setupRouter() *gin.Engine {
 	// gin.DisableConsoleColor()
 	r := gin.Default()
 
+	r.GET("/", func(c *gin.Context) {
+		c.String(200, "Hello there")
+	})
+
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
 		c.String(200, "pong")

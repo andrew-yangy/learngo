@@ -41,7 +41,7 @@ resource "kubernetes_deployment" this {
         container {
           image = var.k8s_image.repository
           name  = var.k8s_name
-          image_pull_policy = "IfNotPresent"
+          image_pull_policy = "Always"
           port {
             container_port = var.k8s_image.containerPort
           }

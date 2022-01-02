@@ -7,7 +7,7 @@ provider "kubernetes" {
 resource "kubernetes_namespace" "learngo" {
   metadata {
     labels = {
-      name = var.k8s_namespace
+      name              = var.k8s_namespace
       "istio-injection" = "enabled"
     }
 
@@ -24,13 +24,13 @@ provider "helm" {
 }
 
 locals {
-  chartHash = sha1(join("", [for f in fileset("./kube", "**/*.yaml"): filesha1("./kube/${f}")]))
+  chartHash = sha1(join("", [for f in fileset("./kube", "**/*.yaml") : filesha1("./kube/${f}")]))
 }
 
 resource "helm_release" "istio" {
-  name       = "learngo-istio"
+  name      = "learngo-istio"
   namespace = var.k8s_namespace
-  chart      = "./kube"
+  chart     = "./kube"
 
   set {
     name  = "chart hash"
@@ -41,13 +41,13 @@ resource "helm_release" "istio" {
 module "order_service" {
   source = "./modules/learngo-services"
 
-  app_name = "order"
-  k8s_namespace = var.k8s_namespace
-  k8s_name = "order-api"
+  app_name         = "order"
+  k8s_namespace    = var.k8s_namespace
+  k8s_name         = "order-api"
   k8s_replicaCount = 2
   k8s_image = {
-    repository="${var.image_registry}/order:latest"
-    containerPort=8080
+    repository    = "${var.image_registry}/order:latest"
+    containerPort = 8080
   }
   image_registry = var.image_registry
 }
