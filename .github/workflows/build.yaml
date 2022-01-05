@@ -2,7 +2,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - skaffold
+      - master
 
 env:
   AWS_REGION: us-east-2
