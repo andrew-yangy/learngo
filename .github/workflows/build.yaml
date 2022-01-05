@@ -22,18 +22,9 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Install skaffold
-        run: |
-          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
-          sudo install skaffold /usr/local/bin/
-          skaffold version
-
-      - name: Build and deploy to cluster
+      - name: Update kubeconfig
         run: |
           aws eks update-kubeconfig --region us-east-2 --name learngo-stage-eks
-          skaffold run \
-          --default-repo 270878775604.dkr.ecr.us-east-2.amazonaws.com \
-          --kube-context=arn:aws:eks:us-east-2:270878775604:cluster/learngo-stage-eks
 
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
@@ -49,4 +40,5 @@ jobs:
           command: run
           repository: ${{ secrets.ECR_REPO }}
           tag: latest
+          namespace: learngo
 
