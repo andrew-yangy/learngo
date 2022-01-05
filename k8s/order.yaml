@@ -41,7 +41,8 @@ spec:
         app: order
         version: v1
     spec:
-      serviceAccountName: order
+      imagePullSecrets:
+        - name: ecr-secret
       containers:
         - name: order
           image: order

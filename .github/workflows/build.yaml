@@ -25,9 +25,7 @@ jobs:
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
         with:
-          command: build
+          command: run
           repository: 270878775604.dkr.ecr.us-east-2.amazonaws.com
           tag: ${{ github.sha }}
 
-#      - name: Build and Push to ECR
-#        run: bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //services/order:image-push
