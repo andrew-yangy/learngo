@@ -22,9 +22,10 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: k8s config
-        run: |
-          kubectl config view
+      - uses: steebchen/kubectl@v2.0.0
+        with:
+          config: ${{ secrets.KUBE_CONFIG_DATA }}
+
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
         with:

@@ -1,8 +1,8 @@
 name: Infrastructure
 on:
   push:
-#    paths:
-#      - deploy/**
+    paths:
+      - deploy/**
   pull_request:
     types: [opened, reopened]
     paths:
@@ -20,9 +20,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-      - name: k8s config
-        run: |
-          kubectl config view
+
       - name: Terraform fmt
         id: fmt
         run: terraform fmt -check
