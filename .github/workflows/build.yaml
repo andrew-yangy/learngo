@@ -22,16 +22,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - uses: steebchen/kubectl@v2.0.0
-        with:
-          config: ${{ secrets.KUBE_CONFIG_DATA }}
-
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
         with:
           command: run
           repository: ${{ secrets.ECR_REPO }}
           tag: ${{ github.sha }}
+          namespace: learngo
 
       - name: Tag image to latest
         uses: hiberbee/github-action-skaffold@1.14.0
