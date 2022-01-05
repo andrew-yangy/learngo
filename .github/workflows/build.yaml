@@ -1,8 +1,8 @@
-name: Build
+name: Build and Deploy
 on:
   push:
-  pull_request:
-    types: [opened, reopened]
+    branches:
+      - master
 
 env:
   AWS_REGION: us-east-2
@@ -10,20 +10,7 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Cache bazelisk download
-        uses: actions/cache@v2
-        env:
-          cache-name: bazel-cache
-        with:
-          path: |
-            ~/.cache/bazelisk
-            ~/.cache/bazel
-          key: ${{ runner.os }}-${{ env.cache-name }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-development
-
       - uses: actions/checkout@v2
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -35,75 +22,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and Push to ECR
-        run: bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //services/order:image-push
-
-  deploy-stage:
-    needs: build-and-publish
-    runs-on: ubuntu-latest
-    environment: stage
-    defaults:
-      run:
-        working-directory: deploy
-    steps:
-      - uses: actions/checkout@v2
-      - uses: hashicorp/setup-terraform@v1
+      - name: Push latest image to ECR
+        uses: hiberbee/github-action-skaffold@1.14.0
         with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          command: build
+          repository: 270878775604.dkr.ecr.us-east-2.amazonaws.com/order
+          tag: $GITHUB_SHA
 
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-
-      - name: Terraform Plan
-        id: plan
-        if: github.event_name == 'pull_request'
-        run: terraform plan -no-color
-        continue-on-error: true
-
-      - name: Update Pull Request
-        uses: actions/github-script@0.9.0
-        if: github.event_name == 'pull_request'
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-            
-            <details><summary>Show Plan</summary>
-            
-            \`\`\`\n
-            ${process.env.PLAN}
-            \`\`\`
-            
-            </details>
-            
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-            
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
-
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve
+#      - name: Build and Push to ECR
+#        run: bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //services/order:image-push

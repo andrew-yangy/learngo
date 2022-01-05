@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order
+  labels:
+    app: order
+    service: order
+spec:
+  ports:
+    - port: 80
+      name: http
+      targetPort: 8080
+  selector:
+    app: order
+    version: v1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-v1
+  labels:
+    app: order
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: order
+        version: v1
+    spec:
+      containers:
+        - name: order
+          image: order
+          imagePullPolicy: IfNotPresent #Always
+          ports:
+            - containerPort: 8080

@@ -1,0 +1,9 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+build:
+  artifacts:
+    - image: order
+      bazel:
+        target: //services/order:image.tar
+        args:
+        - --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64

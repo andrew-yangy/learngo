@@ -38,16 +38,16 @@ resource "helm_release" "istio" {
   }
 }
 
-module "order_service" {
-  source = "./modules/learngo-services"
-
-  app_name         = "order"
-  k8s_namespace    = var.k8s_namespace
-  k8s_name         = "order-api"
-  k8s_replicaCount = 2
-  k8s_image = {
-    repository    = "${var.image_registry}/order:latest"
-    containerPort = 8080
-  }
-  image_registry = var.image_registry
-}
+#module "order_service" {
+#  source = "./modules/learngo-services"
+#
+#  app_name         = "order"
+#  k8s_namespace    = var.k8s_namespace
+#  k8s_name         = "order-api"
+#  k8s_replicaCount = 2
+#  k8s_image = {
+#    repository    = "${var.image_registry}/order:latest"
+#    containerPort = 8080
+#  }
+#  image_registry = var.image_registry
+#}
