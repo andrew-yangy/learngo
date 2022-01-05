@@ -27,7 +27,8 @@ jobs:
         with:
           command: build
           repository: 270878775604.dkr.ecr.us-east-2.amazonaws.com/order
-          tag: $GITHUB_SHA
+#          tag: $GITHUB_SHA
+          tag: latest
 
 #      - name: Build and Push to ECR
 #        run: bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //services/order:image-push
