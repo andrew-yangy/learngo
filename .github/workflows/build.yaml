@@ -22,13 +22,16 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region us-east-2 --name learngo-stage-eks
+
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
         with:
           command: run
           repository: ${{ secrets.ECR_REPO }}
           tag: ${{ github.sha }}
-          kube-context: arn:aws:eks:us-east-2:270878775604:cluster/learngo-stage-eks
           namespace: learngo
 
       - name: Tag image to latest
@@ -37,4 +40,5 @@ jobs:
           command: run
           repository: ${{ secrets.ECR_REPO }}
           tag: latest
+          namespace: learngo
 
