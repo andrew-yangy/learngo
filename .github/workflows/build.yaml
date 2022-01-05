@@ -22,6 +22,17 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Set up tools
+        uses: daisaru11/setup-cd-tools@v1
+        with:
+          skaffold: '1.35.0'
+
+      - name: Build and deploy to cluster
+        run: |
+          skaffold run \
+          --default-repo 270878775604.dkr.ecr.us-east-2.amazonaws.com \
+          --kube-context=arn:aws:eks:us-east-2:270878775604:cluster/learngo-stage-eks
+
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
         with:
@@ -29,7 +40,6 @@ jobs:
           repository: ${{ secrets.ECR_REPO }}
           tag: ${{ github.sha }}
           namespace: learngo
-          kube-context: arn:aws:eks:us-east-2:270878775604:cluster/learngo-stage-eks
 
       - name: Tag image to latest
         uses: hiberbee/github-action-skaffold@1.14.0
