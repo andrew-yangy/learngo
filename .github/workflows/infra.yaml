@@ -2,11 +2,11 @@ name: Infrastructure
 on:
   push:
     paths:
-      - deploy
+      - deploy/**
   pull_request:
     types: [opened, reopened]
     paths:
-      - deploy
+      - deploy/**
 
 jobs:
   deploy-stage:

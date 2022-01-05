@@ -7,3 +7,8 @@ build:
         target: //services/order:image.tar
         args:
         - --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
+deploy:
+  kubectl:
+    manifests:
+      - k8s/*.yaml
+    defaultNamespace: learngo

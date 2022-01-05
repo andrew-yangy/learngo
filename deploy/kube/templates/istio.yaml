@@ -25,4 +25,4 @@ spec:
   http:
   - route:
     - destination:
-        host: order-api
+        host: order
