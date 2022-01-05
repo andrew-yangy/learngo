@@ -24,7 +24,7 @@ jobs:
 
       - name: Update kubeconfig
         run: |
-          aws eks update-kubeconfig --region us-east-2 --name learngo-stage-eks
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name learngo-stage-eks
 
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
