@@ -26,7 +26,7 @@ jobs:
         uses: hiberbee/github-action-skaffold@1.14.0
         with:
           command: build
-          repository: 270878775604.dkr.ecr.us-east-2.amazonaws.com/order
+          repository: 270878775604.dkr.ecr.us-east-2.amazonaws.com
 #          tag: $GITHUB_SHA
           tag: latest
 
