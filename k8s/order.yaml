@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: order
+automountServiceAccountToken: false
 imagePullSecrets:
 - name: ecr-secret
 ---
@@ -41,8 +42,7 @@ spec:
         app: order
         version: v1
     spec:
-      imagePullSecrets:
-        - name: ecr-secret
+      serviceAccountName: order
       containers:
         - name: order
           image: order
