@@ -18,15 +18,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-      env:
-        - name: KUBERNETES_SERVICE_HOST
-          value: "kubernetes.default.svc.cluster.local"
-        - name: KUBERNETES_SERVICE_PORT
-          value: "443"
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: k8s config
+        run: |
+          kubectl config view
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
         with:
