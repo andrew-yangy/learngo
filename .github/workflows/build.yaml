@@ -6,6 +6,8 @@ on:
 
 env:
   AWS_REGION: us-east-2
+  CLUSTER_NAME: learngo-stage-eks
+  NAMESPACE: learngo
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
@@ -24,21 +26,21 @@ jobs:
 
       - name: Update kubeconfig
         run: |
-          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name learngo-stage-eks
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
 
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
         with:
           command: run
-          repository: ${{ secrets.ECR_REPO }}
+          repository: ${{ steps.login-ecr.outputs.registry }}
           tag: ${{ github.sha }}
-          namespace: learngo
+          namespace: ${{ env.NAMESPACE }}
 
       - name: Tag image to latest
         uses: hiberbee/github-action-skaffold@1.14.0
         with:
           command: run
-          repository: ${{ secrets.ECR_REPO }}
+          repository: ${{ steps.login-ecr.outputs.registry }}
           tag: latest
-          namespace: learngo
+          namespace: ${{ env.NAMESPACE }}
 
