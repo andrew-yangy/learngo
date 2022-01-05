@@ -25,7 +25,7 @@ jobs:
       - name: Set up tools
         uses: daisaru11/setup-cd-tools@v1
         with:
-          skaffold: '1.35.0'
+          skaffold: '1.35.1'
 
       - name: Build and deploy to cluster
         run: |
