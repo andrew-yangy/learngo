@@ -22,9 +22,6 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Set up tools
-        uses: daisaru11/setup-cd-tools@v1
-
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
         with:
@@ -32,6 +29,7 @@ jobs:
           repository: ${{ secrets.ECR_REPO }}
           tag: ${{ github.sha }}
           namespace: learngo
+          kube-context: arn:aws:eks:us-east-2:270878775604:cluster/learngo-stage-eks
 
       - name: Tag image to latest
         uses: hiberbee/github-action-skaffold@1.14.0
