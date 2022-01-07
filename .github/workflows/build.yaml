@@ -33,10 +33,10 @@ jobs:
       - name: Push latest image to ECR
         run: |
           skaffold run \
-          --default-repo ${{ steps.login-ecr.outputs.registry }} \
-          --tag ${{ github.sha }} \
-          --namespace ${{ env.NAMESPACE }} \
-          --status-check false
+          --default-repo=${{ steps.login-ecr.outputs.registry }} \
+          --tag=${{ github.sha }} \
+          --namespace=${{ env.NAMESPACE }} \
+          --status-check=false
 
       - name: Tag image to latest
         uses: hiberbee/github-action-skaffold@1.14.0
