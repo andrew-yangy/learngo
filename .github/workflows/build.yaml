@@ -24,6 +24,10 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
+
       - name: Install skaffold
         run: |
           curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
@@ -39,11 +43,10 @@ jobs:
           --status-check=false
 
       - name: Tag image to latest
-        uses: hiberbee/github-action-skaffold@1.14.0
-        with:
-          command: run
-          repository: ${{ steps.login-ecr.outputs.registry }}
-          tag: latest
-          namespace: ${{ env.NAMESPACE }}
-          status-check: false
+        run: |
+          skaffold run \
+          --default-repo=${{ steps.login-ecr.outputs.registry }} \
+          --tag=latest \
+          --namespace=${{ env.NAMESPACE }} \
+          --status-check=false
 
