@@ -2,15 +2,15 @@ module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = local.cluster_name
   cluster_version = "1.20"
-  subnets         = module.vpc.private_subnets
 
   vpc_id = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
 
-  workers_group_defaults = {
+  self_managed_node_group_defaults = {
     root_volume_type = "gp2"
   }
 
-  worker_groups = [
+  self_managed_node_groups = [
     {
       name                          = "worker-group-1"
       instance_type                 = "t2.small"
@@ -26,7 +26,7 @@ module "eks" {
       asg_desired_capacity          = 1
     },
   ]
-  workers_additional_policies = [aws_iam_policy.worker_policy.arn]
+  iam_role_additional_policies = [aws_iam_policy.worker_policy.arn]
 }
 
 data "aws_eks_cluster" "cluster" {
