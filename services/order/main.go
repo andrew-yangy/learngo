@@ -13,7 +13,7 @@ func setupRouter() *gin.Engine {
 	r := gin.Default()
 
 	r.GET("/", func(c *gin.Context) {
-		c.String(200, "Hello andrew")
+		c.String(200, "Hello Andrew yang")
 	})
 
 	// Ping test
