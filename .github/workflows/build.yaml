@@ -35,6 +35,7 @@ jobs:
           repository: ${{ steps.login-ecr.outputs.registry }}
           tag: ${{ github.sha }}
           namespace: ${{ env.NAMESPACE }}
+          status-check: false
 
       - name: Tag image to latest
         uses: hiberbee/github-action-skaffold@1.14.0
@@ -43,4 +44,5 @@ jobs:
           repository: ${{ steps.login-ecr.outputs.registry }}
           tag: latest
           namespace: ${{ env.NAMESPACE }}
+          status-check: false
 
