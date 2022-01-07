@@ -1,6 +1,8 @@
 name: Infrastructure
 on:
   push:
+    paths:
+      - deploy/**
   pull_request:
     types: [opened, reopened]
     paths:

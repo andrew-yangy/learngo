@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -18,19 +19,20 @@ type TodoPageData struct {
 
 func main() {
 	fmt.Println("Frontend server started")
-	//resp, err := http.Get("http://localhost:8080")
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
-	//defer resp.Body.Close()
-	//b, err := io.ReadAll(resp.Body)
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
+	resp, err := http.Get("http://order.learngo.svc.cluster.local")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	tmpl := template.Must(template.ParseFiles("services/frontend/templates/index.html"))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		data := TodoPageData{
-			PageTitle: "My TODO list",
+			PageTitle: string(b),
 			Todos: []Todo{
 				{Title: "Task 1", Done: false},
 				{Title: "Task 2", Done: true},
