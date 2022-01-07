@@ -24,10 +24,11 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Set up tools
-        uses: daisaru11/setup-cd-tools@v1
-        with:
-          skaffold: '1.35.1'
+      - name: Install skaffold
+        run: |
+          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
+          sudo install skaffold /usr/local/bin/
+          skaffold version
 
       - name: Push latest image to ECR
         run: |
