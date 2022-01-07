@@ -24,18 +24,18 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
+      - name: Set up tools
+        uses: daisaru11/setup-cd-tools@v1
+        with:
+          skaffold: '1.35.1'
 
       - name: Push latest image to ECR
-        uses: hiberbee/github-action-skaffold@1.14.0
-        with:
-          command: run
-          repository: ${{ steps.login-ecr.outputs.registry }}
-          tag: ${{ github.sha }}
-          namespace: ${{ env.NAMESPACE }}
-          status-check: false
+        run: |
+          skaffold run \
+          --default-repo ${{ steps.login-ecr.outputs.registry }} \
+          --tag ${{ github.sha }} \
+          --namespace ${{ env.NAMESPACE }} \
+          --status-check false
 
       - name: Tag image to latest
         uses: hiberbee/github-action-skaffold@1.14.0
