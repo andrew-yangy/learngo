@@ -28,6 +28,13 @@ container_pull(
     tag = "3.8",
 )
 
+load(
+    "@io_bazel_rules_docker//go:image.bzl",
+    go_image_repos = "repositories",
+)
+
+go_image_repos()
+
 load("@io_bazel_rules_docker//repositories:pip_repositories.bzl", "pip_deps")
 pip_deps()
 
