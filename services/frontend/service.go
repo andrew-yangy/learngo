@@ -4,10 +4,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+)
+
+var (
+	namespace = OrString(os.Getenv("K8S_NAMESPACE"), "default")
+	orderAPI  = fmt.Sprintf("http://order.%s.svc.cluster.local", namespace)
 )
 
 func (fe *frontendServer) getOrders() string {
-	resp, err := http.Get("http://order.learngo.svc.cluster.local")
+	resp, err := http.Get(orderAPI)
 	if err != nil {
 		fmt.Println(err)
 	}
