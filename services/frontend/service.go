@@ -7,7 +7,7 @@ import (
 )
 
 func (fe *frontendServer) getOrders() string {
-	resp, err := http.Get("http://order.default.svc.cluster.local")
+	resp, err := http.Get("http://order.learngo.svc.cluster.local")
 	if err != nil {
 		fmt.Println(err)
 	}
