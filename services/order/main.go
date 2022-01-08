@@ -3,6 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
+const (
+	port = "8080"
 )
 
 var db = make(map[string]string)
@@ -16,10 +21,7 @@ func setupRouter() *gin.Engine {
 		c.String(200, "Hello Andrew!!")
 	})
 
-	// Ping test
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(200, "pong")
-	})
+	r.GET("/health", func(c *gin.Context) { c.String(http.StatusOK, "ok") })
 
 	// Get user value
 	r.GET("/user/:name", func(c *gin.Context) {
@@ -36,7 +38,7 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-	fmt.Println("Hello")
+	fmt.Printf("Starting Order service at: %s", port)
 	r := setupRouter()
-	r.Run(":8080")
+	r.Run(":" + port)
 }

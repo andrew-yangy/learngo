@@ -15,8 +15,19 @@ build:
         target: //services/order:image.tar
         args:
           - --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
+
 portForward:
   - resourceType: deployment
     resourceName: frontend-v1
     port: 3000
     localPort: 3000
+profiles:
+- name: dev
+  build:
+    local:
+      push: false
+  deploy:
+    statusCheckDeadlineSeconds: 300
+    kubeContext: custom
+  activation:
+    - command: dev

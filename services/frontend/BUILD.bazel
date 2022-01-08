@@ -2,14 +2,19 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 
 package(default_visibility = ["//visibility:public"])
+
 web_sources = glob(["templates/**"])
 
 go_library(
     name = "go_default_library",
-    srcs = ["main.go"],
+    srcs = [
+        "handlers.go",
+        "main.go",
+        "service.go",
+    ],
     importpath = "github.com/ddvkid/learngo/services/frontend",
     visibility = ["//visibility:private"],
-    deps = ["@com_github_gorilla_mux//:go_default_library"],
+    deps = ["@com_github_gin_gonic_gin//:go_default_library"],
 )
 
 go_binary(
