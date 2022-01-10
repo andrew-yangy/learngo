@@ -16,11 +16,6 @@ build:
         args:
           - --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
 
-portForward:
-  - resourceType: deployment
-    resourceName: frontend-v1
-    port: 3000
-    localPort: 3000
 profiles:
 - name: dev
   build:
@@ -29,5 +24,11 @@ profiles:
   deploy:
     statusCheckDeadlineSeconds: 300
     kubeContext: custom
+  portForward:
+    - resourceType: deployment
+      resourceName: frontend-v1
+      namespace: default
+      port: 3000
+      localPort: 3000
   activation:
     - command: dev

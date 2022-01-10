@@ -13,6 +13,7 @@ var (
 )
 
 func (fe *frontendServer) getOrders() string {
+	fmt.Print(namespace)
 	resp, err := http.Get(orderAPI)
 	if err != nil {
 		fmt.Println(err)
