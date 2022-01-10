@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	namespace = OrString(os.Getenv("NAMESPACE"), "default")
+	namespace = OrString(os.Getenv("K8S_NAMESPACE"), "default")
 	orderAPI  = fmt.Sprintf("http://order.%s.svc.cluster.local", namespace)
 )
 
