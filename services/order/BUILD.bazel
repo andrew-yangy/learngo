@@ -8,10 +8,13 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//internal/util:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/credentials:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/signer/v4:go_default_library",
         "@com_github_aws_aws_sdk_go_v2_config//:go_default_library",
         "@com_github_aws_aws_sdk_go_v2_service_kafka//:go_default_library",
         "@com_github_gin_gonic_gin//:go_default_library",
         "@com_github_segmentio_kafka_go//:go_default_library",
+        "@com_github_segmentio_kafka_go//sasl/aws_msk_iam:go_default_library",
     ],
 )
 

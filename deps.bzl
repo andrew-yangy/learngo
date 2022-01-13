@@ -563,3 +563,21 @@ def go_dependencies():
         sum = "h1:PBdbvYpyOdFLehj8j+9ba7FL4c4Moxn79gy9cYKxG5E=",
         version = "v1.8.2",
     )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go",
+        importpath = "github.com/aws/aws-sdk-go",
+        sum = "h1:deglLZ1jjHdhkd6Rbad1MZM4gL+1pfnTfjuFk6CGJFM=",
+        version = "v1.41.3",
+    )
+    go_repository(
+        name = "com_github_pkg_errors",
+        importpath = "github.com/pkg/errors",
+        sum = "h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=",
+        version = "v0.9.1",
+    )
+    go_repository(
+        name = "com_github_segmentio_kafka_go_sasl_aws_msk_iam",
+        importpath = "github.com/segmentio/kafka-go/sasl/aws_msk_iam",
+        sum = "h1:tbJTXFTC/nWw94bNJqn5wfjRR6MSySW+UPyhu47BSqY=",
+        version = "v0.0.0-20220104182514-37ab7b1b613c",
+    )
