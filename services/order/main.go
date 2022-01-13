@@ -125,6 +125,6 @@ func main() {
 		fmt.Print("failed to close reader:", err)
 	}
 
-	//r := setupRouter()
-	//r.Run(":" + port)
+	r := setupRouter()
+	r.Run(":" + port)
 }
