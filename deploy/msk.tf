@@ -1,5 +1,4 @@
 locals {
-  msk_cluster_name    = "learngo-kafka"
   kafka_version   = "2.6.2"
   client_subnets  = module.vpc.public_subnets
   number_of_nodes = length(module.vpc.public_subnets)
@@ -14,7 +13,7 @@ data "aws_subnet" "this" {
 }
 
 resource "aws_security_group" "this" {
-  name_prefix = "${local.msk_cluster_name}-"
+  name_prefix = "${local.cluster_name}-"
   vpc_id      = data.aws_subnet.this.vpc_id
 }
 
@@ -55,7 +54,7 @@ resource "aws_security_group_rule" "zookeeper-tls" {
 }
 
 resource "random_id" "configuration" {
-  prefix      = "${local.msk_cluster_name}-"
+  prefix      = "${local.cluster_name}-"
   byte_length = 8
 
   keepers = {
@@ -76,7 +75,7 @@ resource "aws_msk_configuration" "this" {
 resource "aws_msk_cluster" "this" {
   depends_on = [aws_msk_configuration.this]
 
-  cluster_name           = local.msk_cluster_name
+  cluster_name           = local.cluster_name
   kafka_version          = local.kafka_version
   number_of_broker_nodes = local.number_of_nodes
 
