@@ -62,7 +62,7 @@ func main() {
 
 	sharedTransport := &kafka.Transport{
 		SASL: &aws_msk_iam.Mechanism{
-			Signer: sigv4.NewSigner(credentials.NewSharedCredentials("", "")),
+			Signer: sigv4.NewSigner(credentials.NewEnvCredentials()),
 			Region: awsRegion,
 		},
 		TLS: &tls.Config{},
