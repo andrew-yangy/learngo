@@ -36,3 +36,8 @@ output "cluster_name" {
 output "load_balancer_hostname" {
   value = data.kubernetes_service.istio_ingress_gateway.status.0.load_balancer.0.ingress.0.hostname
 }
+
+output "cluster_arn" {
+  description = "Amazon Resource Name (ARN) of the MSK cluster"
+  value       = aws_msk_cluster.this.arn
+}

@@ -11,11 +11,13 @@ go_library(
         "handlers.go",
         "main.go",
         "service.go",
-        "utils.go",
     ],
     importpath = "github.com/ddvkid/learngo/services/frontend",
     visibility = ["//visibility:private"],
-    deps = ["@com_github_gin_gonic_gin//:go_default_library"],
+    deps = [
+        "//internal/util:go_default_library",
+        "@com_github_gin_gonic_gin//:go_default_library",
+    ],
 )
 
 go_binary(

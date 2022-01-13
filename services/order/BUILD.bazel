@@ -6,7 +6,13 @@ go_library(
     srcs = ["main.go"],
     importpath = "github.com/ddvkid/learngo/services/order",
     visibility = ["//visibility:private"],
-    deps = ["@com_github_gin_gonic_gin//:go_default_library"],
+    deps = [
+        "//internal/util:go_default_library",
+        "@com_github_aws_aws_sdk_go_v2_config//:go_default_library",
+        "@com_github_aws_aws_sdk_go_v2_service_kafka//:go_default_library",
+        "@com_github_gin_gonic_gin//:go_default_library",
+        "@com_github_segmentio_kafka_go//:go_default_library",
+    ],
 )
 
 go_binary(

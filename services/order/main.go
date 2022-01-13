@@ -1,20 +1,29 @@
 package main
 
 import (
+	"context"
+	"crypto/tls"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/config"
+	msk "github.com/aws/aws-sdk-go-v2/service/kafka"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	sigv4 "github.com/aws/aws-sdk-go/aws/signer/v4"
+	"github.com/ddvkid/learngo/internal/util"
 	"github.com/gin-gonic/gin"
+	"github.com/segmentio/kafka-go"
+	"github.com/segmentio/kafka-go/sasl/aws_msk_iam"
 	"net/http"
+	"strings"
 )
 
-const (
-	port = "8080"
+var (
+	port      = "8080"
+	awsRegion = util.GetEnv("AWS_REGION", "us-east-2")
 )
 
 var db = make(map[string]string)
 
 func setupRouter() *gin.Engine {
-	// Disable Console Color
-	// gin.DisableConsoleColor()
 	r := gin.Default()
 
 	r.GET("/", func(c *gin.Context) {
@@ -38,7 +47,46 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-	fmt.Printf("Starting Order service at: %s", port)
-	r := setupRouter()
-	r.Run(":" + port)
+	fmt.Printf("Starting Order service at: %s\n", port)
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(awsRegion), config.WithEC2IMDSRegion())
+	if err != nil {
+		fmt.Printf("failed to load configuration, %v\n", err)
+	}
+
+	client := msk.NewFromConfig(cfg)
+	clusterDetails, err := util.GetClusterConfig(client)
+	if err != nil {
+		fmt.Printf("failed to GetClusterConfig, %v\n", err)
+	}
+
+	dialer := &kafka.Dialer{
+		SASLMechanism: &aws_msk_iam.Mechanism{
+			Signer: sigv4.NewSigner(credentials.NewSharedCredentials("", "")),
+			Region: awsRegion,
+		},
+		TLS: &tls.Config{},
+	}
+
+	reader := kafka.NewReader(kafka.ReaderConfig{
+		Brokers: strings.Split(*clusterDetails.Brokers.BootstrapBrokerStringPublicSaslIam, ","),
+		GroupID: "my-group",
+		Topic:   "AWSKafkaTutorialTopic",
+		Dialer:  dialer,
+	})
+	defer reader.Close()
+
+	fmt.Println("start consuming ... !!", reader.Config())
+	for {
+		m, err := reader.ReadMessage(context.TODO())
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Printf("message at topic/partition/offset %v/%v/%v: %s = %s\n", m.Topic, m.Partition, m.Offset, string(m.Key), string(m.Value))
+	}
+	if err := reader.Close(); err != nil {
+		fmt.Print("failed to close reader:", err)
+	}
+	//r := setupRouter()
+	//r.Run(":" + port)
 }

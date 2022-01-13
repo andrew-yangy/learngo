@@ -394,8 +394,8 @@ def go_dependencies():
     go_repository(
         name = "org_golang_x_tools",
         importpath = "golang.org/x/tools",
-        sum = "h1:6j8CgantCy3yc8JGBqkDLMKWqZ0RDU2g1HVgacojGWQ=",
-        version = "v0.1.7",
+        sum = "h1:FDhOuMEY4JVRztM/gsbk+IKUQ8kj74bxZrgw87eMMVc=",
+        version = "v0.0.0-20180917221912-90fa682c2a6e",
     )
     go_repository(
         name = "org_golang_x_xerrors",
@@ -408,4 +408,158 @@ def go_dependencies():
         importpath = "github.com/gorilla/mux",
         sum = "h1:VuZ8uybHlWmqV03+zRzdwKL4tUnIp1MAQtp1mIFE1bc=",
         version = "v1.7.4",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2",
+        importpath = "github.com/aws/aws-sdk-go-v2",
+        sum = "h1:z5bijqy+eXLK/QqF6eQcwCN2qw1k+m9OUDicqCZygu0=",
+        version = "v1.12.0",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2_config",
+        importpath = "github.com/aws/aws-sdk-go-v2/config",
+        sum = "h1:WOhIzj5HdixjlvQ4SLYAOk6OUUsuu88RwcsTzexa9cg=",
+        version = "v1.12.0",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2_credentials",
+        importpath = "github.com/aws/aws-sdk-go-v2/credentials",
+        sum = "h1:KFuKwPs7i5SE5a0LxqAxz75qxSjr2HnHnhu0UPGlvpM=",
+        version = "v1.7.0",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2_feature_ec2_imds",
+        importpath = "github.com/aws/aws-sdk-go-v2/feature/ec2/imds",
+        sum = "h1:fPq3oloONbHaA0O8KX/KYUQk7pG9JjKBwYQvQsQDK84=",
+        version = "v1.9.0",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2_internal_ini",
+        build_directives = [
+            "gazelle:go_visibility @com_github_aws_aws_sdk_go_v2_config//:__subpackages__",
+        ],
+        importpath = "github.com/aws/aws-sdk-go-v2/internal/ini",
+        sum = "h1:fmGqMNlFTHr9Y48qmYYv2qIo+TAsST3qZa2d1HcwBeo=",
+        version = "v1.3.3",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2_service_internal_presigned_url",
+        build_directives = [
+            "gazelle:go_visibility @com_github_aws_aws_sdk_go_v2_service_sts//:__subpackages__",
+        ],
+        importpath = "github.com/aws/aws-sdk-go-v2/service/internal/presigned-url",
+        sum = "h1:rwE0kWa5qm0yEoNPwC3zhrt1tFVXTmkWRlUxLayAwyc=",
+        version = "v1.6.0",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2_service_sso",
+        importpath = "github.com/aws/aws-sdk-go-v2/service/sso",
+        sum = "h1:X77LUt6Djy3Z02r6tW7Z+4FNr6GCnEG54EXfskc19M4=",
+        version = "v1.8.0",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2_service_sts",
+        importpath = "github.com/aws/aws-sdk-go-v2/service/sts",
+        sum = "h1:n8+dZMOvwkGtmhub8B2wYvRHut45/NB7DeNhNcUnBpg=",
+        version = "v1.13.0",
+    )
+    go_repository(
+        name = "com_github_aws_smithy_go",
+        importpath = "github.com/aws/smithy-go",
+        sum = "h1:5vetTooLk4hPWV8q6ym6+lXKAT1Urnm49YkrRKo2J8o=",
+        version = "v1.9.1",
+    )
+    go_repository(
+        name = "com_github_jmespath_go_jmespath",
+        importpath = "github.com/jmespath/go-jmespath",
+        sum = "h1:BEgLn5cpjn8UN1mAw4NjwDrS35OdebyEtFe+9YPoQUg=",
+        version = "v0.4.0",
+    )
+    go_repository(
+        name = "com_github_jmespath_go_jmespath_internal_testify",
+        importpath = "github.com/jmespath/go-jmespath/internal/testify",
+        sum = "h1:shLQSRRSCCPj3f2gpwzGwWFoC7ycTf1rcQZHOlsJ6N8=",
+        version = "v1.5.1",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2_internal_configsources",
+        build_directives = [
+            "gazelle:go_visibility @com_github_aws_aws_sdk_go_v2_service_sts//:__subpackages__",
+            "gazelle:go_visibility @com_github_aws_aws_sdk_go_v2_service_sso//:__subpackages__",
+            "gazelle:go_visibility @com_github_aws_aws_sdk_go_v2_service_kafka//:__subpackages__",
+        ],
+        importpath = "github.com/aws/aws-sdk-go-v2/internal/configsources",
+        sum = "h1:YPNiEXnuWdkpNOwBFHhcLwkSmewwQRcPFO9dHmxU0qg=",
+        version = "v1.1.3",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2_internal_endpoints_v2",
+        build_directives = [
+            "gazelle:go_visibility @com_github_aws_aws_sdk_go_v2_service_sts//:__subpackages__",
+            "gazelle:go_visibility @com_github_aws_aws_sdk_go_v2_service_sso//:__subpackages__",
+            "gazelle:go_visibility @com_github_aws_aws_sdk_go_v2_service_kafka//:__subpackages__",
+        ],
+        importpath = "github.com/aws/aws-sdk-go-v2/internal/endpoints/v2",
+        sum = "h1:ArRd27pSm66f7cCBDPS77wvxiS4IRjFatpzVBD7Aojc=",
+        version = "v2.1.0",
+    )
+    go_repository(
+        name = "com_github_aws_aws_sdk_go_v2_service_kafka",
+        importpath = "github.com/aws/aws-sdk-go-v2/service/kafka",
+        sum = "h1:AT5yZBTuQkextyAlxdGZJcuWw4xc+t4+LmOa2GI2g4Q=",
+        version = "v1.13.0",
+    )
+    go_repository(
+        name = "com_github_eapache_go_xerial_snappy",
+        importpath = "github.com/eapache/go-xerial-snappy",
+        sum = "h1:YEetp8/yCZMuEPMUDHG0CW/brkkEp8mzqk2+ODEitlw=",
+        version = "v0.0.0-20180814174437-776d5712da21",
+    )
+    go_repository(
+        name = "com_github_frankban_quicktest",
+        importpath = "github.com/frankban/quicktest",
+        sum = "h1:8sXhOn0uLys67V8EsXLc6eszDs8VXWxL3iRvebPhedY=",
+        version = "v1.11.3",
+    )
+    go_repository(
+        name = "com_github_golang_snappy",
+        importpath = "github.com/golang/snappy",
+        sum = "h1:Qgr9rKW7uDUkrbSmQeiDsGa8SjGyCOGtuasMWwvp2P4=",
+        version = "v0.0.1",
+    )
+    go_repository(
+        name = "com_github_klauspost_compress",
+        importpath = "github.com/klauspost/compress",
+        sum = "h1:VMAMUUOh+gaxKTMk+zqbjsSjsIcUcL/LF4o63i82QyA=",
+        version = "v1.9.8",
+    )
+    go_repository(
+        name = "com_github_pierrec_lz4",
+        importpath = "github.com/pierrec/lz4",
+        sum = "h1:Ix9yFKn1nSPBLFl/yZknTp8TU5G4Ps0JDmguYK6iH1A=",
+        version = "v2.6.0+incompatible",
+    )
+    go_repository(
+        name = "com_github_segmentio_kafka_go",
+        importpath = "github.com/segmentio/kafka-go",
+        sum = "h1:QVx9yz12syKBFkxR+dVDDwTO0ItHgnjjhIdBfqizj+8=",
+        version = "v0.4.25",
+    )
+    go_repository(
+        name = "com_github_xdg_scram",
+        importpath = "github.com/xdg/scram",
+        sum = "h1:u40Z8hqBAAQyv+vATcGgV0YCnDjqSL7/q/JyPhhJSPk=",
+        version = "v0.0.0-20180814205039-7eeb5667e42c",
+    )
+    go_repository(
+        name = "com_github_xdg_stringprep",
+        importpath = "github.com/xdg/stringprep",
+        sum = "h1:d9X0esnoa3dFsV0FG35rAT0RIhYFlPq7MiP+DW89La0=",
+        version = "v1.0.0",
+    )
+    go_repository(
+        name = "com_github_confluentinc_confluent_kafka_go",
+        importpath = "github.com/confluentinc/confluent-kafka-go",
+        sum = "h1:PBdbvYpyOdFLehj8j+9ba7FL4c4Moxn79gy9cYKxG5E=",
+        version = "v1.8.2",
     )
