@@ -19,6 +19,7 @@ import (
 var (
 	port      = "8080"
 	awsRegion = util.GetEnv("AWS_REGION", "us-east-2")
+	topic     = "abc"
 )
 
 var db = make(map[string]string)
@@ -59,6 +60,43 @@ func main() {
 		fmt.Printf("failed to GetClusterConfig, %v\n", err)
 	}
 
+	sharedTransport := &kafka.Transport{
+		SASL: &aws_msk_iam.Mechanism{
+			Signer: sigv4.NewSigner(credentials.NewSharedCredentials("", "")),
+			Region: awsRegion,
+		},
+		TLS: &tls.Config{},
+	}
+
+	w := &kafka.Writer{
+		Addr:      kafka.TCP(strings.Split(*clusterDetails.Brokers.BootstrapBrokerStringPublicSaslIam, ",")...),
+		Topic:     topic,
+		Balancer:  &kafka.LeastBytes{},
+		Transport: sharedTransport,
+	}
+
+	err = w.WriteMessages(context.Background(),
+		kafka.Message{
+			Key:   []byte("Key-A"),
+			Value: []byte("Hello World!"),
+		},
+		kafka.Message{
+			Key:   []byte("Key-B"),
+			Value: []byte("One!"),
+		},
+		kafka.Message{
+			Key:   []byte("Key-C"),
+			Value: []byte("Two!"),
+		},
+	)
+	if err != nil {
+		fmt.Println("failed to write messages:", err)
+	}
+
+	if err := w.Close(); err != nil {
+		fmt.Println("failed to close writer:", err)
+	}
+
 	dialer := &kafka.Dialer{
 		SASLMechanism: &aws_msk_iam.Mechanism{
 			Signer: sigv4.NewSigner(credentials.NewSharedCredentials("", "")),
@@ -69,8 +107,7 @@ func main() {
 
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: strings.Split(*clusterDetails.Brokers.BootstrapBrokerStringPublicSaslIam, ","),
-		GroupID: "my-group",
-		Topic:   "AWSKafkaTutorialTopic",
+		Topic:   topic,
 		Dialer:  dialer,
 	})
 	defer reader.Close()
@@ -87,6 +124,7 @@ func main() {
 	if err := reader.Close(); err != nil {
 		fmt.Print("failed to close reader:", err)
 	}
+
 	//r := setupRouter()
 	//r.Run(":" + port)
 }
