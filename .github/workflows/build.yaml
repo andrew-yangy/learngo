@@ -26,8 +26,8 @@ jobs:
 
       - name: Update kubeconfig
         run: |
-          mkdir -p ~/.aws
-          touch ~/.aws/credentials
+          mkdir -p /root/.aws
+          touch /root/.aws/credentials
     
           echo "
           [default]
@@ -35,7 +35,7 @@ jobs:
           aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region = ${AWS_DEFAULT_REGION}" > ~/.aws/credentials 
           
-          cat ~/.aws/credentials
+          cat /root/.aws/credentials
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
 
       - name: Push latest image to ECR
