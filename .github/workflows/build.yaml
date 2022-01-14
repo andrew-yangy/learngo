@@ -29,8 +29,11 @@ jobs:
 
       - name: Update kubeconfig
         run: |
-          ls $HOME
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
+
+      - name: TEST
+        run: |
+          ls $HOME
 
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
