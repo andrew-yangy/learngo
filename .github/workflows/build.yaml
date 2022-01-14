@@ -33,7 +33,7 @@ jobs:
 
       - name: TEST
         run: |
-          ls $HOME
+          ls -a $HOME
 
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0
