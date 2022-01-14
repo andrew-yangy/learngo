@@ -13,7 +13,6 @@ import (
 	"github.com/segmentio/kafka-go"
 	"github.com/segmentio/kafka-go/sasl/aws_msk_iam"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -49,7 +48,6 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-	fmt.Println("AWS_ACCESS_KEY_ID", os.Getenv("AWS_ACCESS_KEY_ID"))
 	fmt.Printf("Starting Order service at: %s\n", port)
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(awsRegion), config.WithEC2IMDSRegion())
 	if err != nil {
@@ -64,7 +62,7 @@ func main() {
 
 	sharedTransport := &kafka.Transport{
 		SASL: &aws_msk_iam.Mechanism{
-			Signer: sigv4.NewSigner(credentials.NewEnvCredentials()),
+			Signer: sigv4.NewSigner(credentials.NewSharedCredentials("", "")),
 			Region: awsRegion,
 		},
 		TLS: &tls.Config{},
@@ -101,7 +99,7 @@ func main() {
 
 	dialer := &kafka.Dialer{
 		SASLMechanism: &aws_msk_iam.Mechanism{
-			Signer: sigv4.NewSigner(credentials.NewEnvCredentials()),
+			Signer: sigv4.NewSigner(credentials.NewSharedCredentials("", "")),
 			Region: awsRegion,
 		},
 		TLS: &tls.Config{},
