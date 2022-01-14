@@ -9,10 +9,7 @@ build:
         - --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
 
     - image: order
-      bazel:
-        target: //services/order:image.tar
-        args:
-          - --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
+      context: services/order
 
 profiles:
 - name: dev
