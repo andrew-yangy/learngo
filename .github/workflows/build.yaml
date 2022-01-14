@@ -41,7 +41,7 @@ jobs:
           aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region = ${AWS_DEFAULT_REGION}"> $HOME/.aws/credentials 
-          ls -a $HOME
+          cat $HOME/.aws/credentials 
 
       - name: Push latest image to ECR
         uses: hiberbee/github-action-skaffold@1.14.0

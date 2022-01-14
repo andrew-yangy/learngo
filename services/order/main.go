@@ -20,7 +20,6 @@ var (
 	port      = "8080"
 	awsRegion = util.GetEnv("AWS_REGION", "us-east-2")
 	topic     = "abc"
-	credPath  = "~/.aws/credentials"
 )
 
 var db = make(map[string]string)
@@ -62,7 +61,7 @@ func main() {
 	fmt.Println(*clusterDetails.Brokers.BootstrapBrokerStringPublicSaslIam)
 	sharedTransport := &kafka.Transport{
 		SASL: &aws_msk_iam.Mechanism{
-			Signer: sigv4.NewSigner(credentials.NewSharedCredentials(credPath, "")),
+			Signer: sigv4.NewSigner(credentials.NewSharedCredentials("", "")),
 			Region: awsRegion,
 		},
 		TLS: &tls.Config{},
@@ -99,7 +98,7 @@ func main() {
 
 	dialer := &kafka.Dialer{
 		SASLMechanism: &aws_msk_iam.Mechanism{
-			Signer: sigv4.NewSigner(credentials.NewSharedCredentials(credPath, "")),
+			Signer: sigv4.NewSigner(credentials.NewSharedCredentials("", "")),
 			Region: awsRegion,
 		},
 		TLS: &tls.Config{},
