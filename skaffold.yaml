@@ -3,8 +3,6 @@ kind: Config
 build:
   artifacts:
     - image: frontend
-      requires:
-        - image: order
       bazel:
         target: //services/frontend:image.tar
         args:
