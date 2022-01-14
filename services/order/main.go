@@ -8,9 +8,9 @@ import (
 	msk "github.com/aws/aws-sdk-go-v2/service/kafka"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	sigv4 "github.com/aws/aws-sdk-go/aws/signer/v4"
-	"github.com/aws/aws-sdk-go/service/kafka"
 	"github.com/ddvkid/learngo/internal/util"
 	"github.com/gin-gonic/gin"
+	"github.com/segmentio/kafka-go"
 	"github.com/segmentio/kafka-go/sasl/aws_msk_iam"
 	"net/http"
 	"strings"
@@ -61,7 +61,7 @@ func main() {
 	fmt.Println(*clusterDetails.Brokers.BootstrapBrokerStringPublicSaslIam)
 	sharedTransport := &kafka.Transport{
 		SASL: &aws_msk_iam.Mechanism{
-			Signer: sigv4.NewSigner(credentials.NewSharedCredentials("", "")),
+			Signer: sigv4.NewSigner(credentials.NewEnvCredentials()),
 			Region: awsRegion,
 		},
 		TLS: &tls.Config{},
@@ -98,7 +98,7 @@ func main() {
 
 	dialer := &kafka.Dialer{
 		SASLMechanism: &aws_msk_iam.Mechanism{
-			Signer: sigv4.NewSigner(credentials.NewSharedCredentials("", "")),
+			Signer: sigv4.NewSigner(credentials.NewEnvCredentials()),
 			Region: awsRegion,
 		},
 		TLS: &tls.Config{},
