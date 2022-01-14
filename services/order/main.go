@@ -13,6 +13,7 @@ import (
 	"github.com/segmentio/kafka-go"
 	"github.com/segmentio/kafka-go/sasl/aws_msk_iam"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -48,6 +49,7 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
+	fmt.Println("AWS_ACCESS_KEY_ID", os.Getenv("AWS_ACCESS_KEY_ID"))
 	fmt.Printf("Starting Order service at: %s\n", port)
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(awsRegion), config.WithEC2IMDSRegion())
 	if err != nil {
