@@ -29,10 +29,11 @@ jobs:
           mkdir -p ~/.aws
           touch ~/.aws/credentials
     
-          echo "[default]
+          echo "
+          [default]
           aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region = ${AWS_DEFAULT_REGION}
+          region = ${AWS_DEFAULT_REGION}" > ~/.aws/credentials 
           
           cat ~/.aws/credentials
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
