@@ -15,3 +15,13 @@ variable "k8s_namespace" {
 variable "image_registry" {
   type = string
 }
+
+variable "aws_access_key_id" {
+  type = string
+  sensitive = true
+}
+
+variable "aws_secret_access_key" {
+  type = string
+  sensitive = true
+}
