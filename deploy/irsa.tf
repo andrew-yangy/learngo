@@ -22,7 +22,29 @@ resource "aws_iam_role" "irsa" {
   })
 }
 
+resource "aws_iam_policy" "kafka_cluster" {
+  name        = "${local.cluster_name}-policy-kafka_cluster"
+  description = "Policy for kafka cluster"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "kafka-cluster:*",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
 resource "aws_iam_role_policy_attachment" "irsa" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonMSKFullAccess"
+  role       = aws_iam_role.irsa.name
+}
+
+resource "aws_iam_role_policy_attachment" "kafka" {
+  policy_arn = aws_iam_policy.kafka_cluster.arn
   role       = aws_iam_role.irsa.name
 }
