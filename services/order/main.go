@@ -52,8 +52,6 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-	fmt.Println("AWS_ROLE_ARN", os.Getenv("AWS_ROLE_ARN"))
-	fmt.Println("AWS_WEB_IDENTITY_TOKEN_FILE", os.Getenv("AWS_WEB_IDENTITY_TOKEN_FILE"))
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(awsRegion), config.WithEC2IMDSRegion())
 	if err != nil {
 		fmt.Printf("failed to load configuration, %v\n", err)
