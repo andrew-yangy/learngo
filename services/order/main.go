@@ -4,8 +4,11 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	msk "github.com/aws/aws-sdk-go-v2/service/kafka"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	sigv4 "github.com/aws/aws-sdk-go/aws/signer/v4"
 	"github.com/ddvkid/learngo/internal/util"
@@ -13,6 +16,7 @@ import (
 	"github.com/segmentio/kafka-go"
 	"github.com/segmentio/kafka-go/sasl/aws_msk_iam"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -48,9 +52,27 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
+	fmt.Println("AWS_ROLE_ARN", os.Getenv("AWS_ROLE_ARN"))
+	fmt.Println("AWS_WEB_IDENTITY_TOKEN_FILE", os.Getenv("AWS_WEB_IDENTITY_TOKEN_FILE"))
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(awsRegion), config.WithEC2IMDSRegion())
 	if err != nil {
 		fmt.Printf("failed to load configuration, %v\n", err)
+	}
+	stsClient := sts.NewFromConfig(cfg)
+	arn := os.Getenv("AWS_ROLE_ARN")
+	sessionName := "order"
+	b, err := stscreds.IdentityTokenFile(os.Getenv("AWS_WEB_IDENTITY_TOKEN_FILE")).GetIdentityToken()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	resp, err := stsClient.AssumeRoleWithWebIdentity(context.TODO(), &sts.AssumeRoleWithWebIdentityInput{
+		RoleArn:          &arn,
+		RoleSessionName:  &sessionName,
+		WebIdentityToken: aws.String(string(b)),
+	})
+	if err != nil {
+		fmt.Println(err)
 	}
 
 	client := msk.NewFromConfig(cfg)
@@ -61,7 +83,7 @@ func main() {
 	fmt.Println(*clusterDetails.Brokers.BootstrapBrokerStringPublicSaslIam)
 	sharedTransport := &kafka.Transport{
 		SASL: &aws_msk_iam.Mechanism{
-			Signer: sigv4.NewSigner(credentials.NewEnvCredentials()),
+			Signer: sigv4.NewSigner(credentials.NewStaticCredentials(*resp.Credentials.AccessKeyId, *resp.Credentials.SecretAccessKey, *resp.Credentials.SessionToken)),
 			Region: awsRegion,
 		},
 		TLS: &tls.Config{},
@@ -98,7 +120,7 @@ func main() {
 
 	dialer := &kafka.Dialer{
 		SASLMechanism: &aws_msk_iam.Mechanism{
-			Signer: sigv4.NewSigner(credentials.NewEnvCredentials()),
+			Signer: sigv4.NewSigner(credentials.NewStaticCredentials(*resp.Credentials.AccessKeyId, *resp.Credentials.SecretAccessKey, *resp.Credentials.SessionToken)),
 			Region: awsRegion,
 		},
 		TLS: &tls.Config{},

@@ -2,6 +2,8 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: order
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::270878775604:role/learngo-stage-eks-irsa
 imagePullSecrets:
 - name: ecr-secret
 ---
@@ -45,17 +47,6 @@ spec:
       containers:
         - name: order
           image: order
-          env:
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: aws-iam-user
-                  key: accessKeyId
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: aws-iam-user
-                  key: secretAccessKey
           imagePullPolicy: IfNotPresent #Always
           ports:
             - containerPort: 8080
@@ -69,5 +60,4 @@ spec:
             httpGet:
               path: /health
               port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            periodSeconds: 100
