@@ -8,6 +8,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.13.0
 	github.com/aws/aws-sdk-go-v2/credentials v1.8.0
 	github.com/aws/aws-sdk-go-v2/service/kafka v1.13.0
+	github.com/aws/aws-sdk-go-v2/service/sts v1.14.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/segmentio/kafka-go v0.4.26
 	github.com/segmentio/kafka-go/sasl/aws_msk_iam v0.0.0-20220114192517-58824603a249
@@ -20,7 +21,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.7.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.9.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.14.0 // indirect
 	github.com/aws/smithy-go v1.10.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
