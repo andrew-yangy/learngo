@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["handler.go"],
+    importpath = "github.com/ddvkid/learngo/internal/kafkaBuilder",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/aws:go_default_library",
+        "//internal/util:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/credentials:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/signer/v4:go_default_library",
+        "@com_github_aws_aws_sdk_go_v2_config//:go_default_library",
+        "@com_github_aws_aws_sdk_go_v2_service_kafka//:go_default_library",
+        "@com_github_segmentio_kafka_go//:go_default_library",
+        "@com_github_segmentio_kafka_go_sasl_aws_msk_iam//:go_default_library",
+    ],
+)

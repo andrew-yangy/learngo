@@ -4,6 +4,8 @@ metadata:
   name: order
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::270878775604:role/learngo-stage-eks-irsa
+    eks.amazonaws.com/sts-regional-endpoints: "true"
+
 imagePullSecrets:
 - name: ecr-secret
 ---
