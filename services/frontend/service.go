@@ -16,5 +16,5 @@ func (fe *frontendServer) getOrders() string {
 	//	fmt.Println(err)
 	//}
 	//return string(b)
-	return "Hello there"
+	return "Hello world"
 }
