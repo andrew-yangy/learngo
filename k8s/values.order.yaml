@@ -1,5 +1,5 @@
 image:
   repository: 270878775604.dkr.ecr.us-east-2.amazonaws.com/order
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   containerPort: 8080

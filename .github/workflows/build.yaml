@@ -29,10 +29,14 @@ jobs:
 
       - name: Update kubeconfig
         run: |
-          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
+          aws eks update-kubeconfig \
+            --region ${{ env.AWS_REGION }} \
+            --name ${{ env.CLUSTER_NAME }}
 
       - name: Build and Push
-        run: make image-push
+        run: |
+          make image-push TAG=${{ github.sha }}
+          make image-push
 
       - name: Deploy
         run: make k8s-deploy NAMESPACE=${{ env.NAMESPACE }}

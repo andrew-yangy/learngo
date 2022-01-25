@@ -32,4 +32,3 @@ go_binary(
     pure = "on",
     visibility = ["//visibility:public"],
 )
-

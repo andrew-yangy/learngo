@@ -14,12 +14,12 @@ go_image(
 )
 
 container_push(
-   name = "push_frontend",
-   image = ":frontend",
-   format = "Docker",
-   registry = "270878775604.dkr.ecr.us-east-2.amazonaws.com",
-   repository = "frontend",
-   tag = "$(TAG)",
+    name = "push_frontend",
+    image = ":frontend",
+    format = "Docker",
+    registry = "270878775604.dkr.ecr.us-east-2.amazonaws.com",
+    repository = "frontend",
+    tag = "$(TAG)",
 )
 
 go_image(
@@ -29,10 +29,10 @@ go_image(
 )
 
 container_push(
-   name = "push_order",
-   image = ":order",
-   format = "Docker",
-   registry = "270878775604.dkr.ecr.us-east-2.amazonaws.com",
-   repository = "order",
-   tag = "$(TAG)",
+    name = "push_order",
+    image = ":order",
+    format = "Docker",
+    registry = "270878775604.dkr.ecr.us-east-2.amazonaws.com",
+    repository = "order",
+    tag = "$(TAG)",
 )

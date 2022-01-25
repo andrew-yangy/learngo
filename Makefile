@@ -1,3 +1,6 @@
+TAG = latest
+NAMESPACE = learngo
+
 clean:
 	bazel clean --expunge
 
@@ -7,19 +10,18 @@ dep-ensure:
 gazelle-repos:
 	bazel run //:gazelle -- update-repos -from_file=go.mod -to_macro=deps.bzl%go_dependencies
 
-gazelle:
-	gazelle-repos
+gazelle: gazelle-repos
 	bazel run //:gazelle
 
-build:
-	gazelle
+.PHONY: build
+build: gazelle
 	bazel build //...
 
 go-setup: dep-ensure gazelle
 
 image-push:
-	bazel run push_frontend --define=TAG=latest
-	bazel run push_order --define=TAG=latest
+	bazel run push_frontend --define=TAG=$(TAG)
+	bazel run push_order --define=TAG=$(TAG)
 
 k8s-deploy:
 	helm upgrade frontend k8s \

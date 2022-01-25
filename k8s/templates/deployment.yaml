@@ -16,6 +16,7 @@ spec:
     metadata:
       labels:
         app: "{{ .Release.Name }}"
+        version: "{{ .Release.Revision }}"
     spec:
       serviceAccountName: {{ .Release.Name }}
       containers:
