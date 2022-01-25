@@ -12,4 +12,3 @@ spec:
       targetPort: {{ .Values.image.containerPort }}
   selector:
     app: {{ .Release.Name }}
-    version: "{{ .Release.Revision }}"

@@ -31,7 +31,9 @@ jobs:
         run: |
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
 
+      - name: Build and Push
+        run: make image-push
+
       - name: Deploy
-        run: |
-          make k8s-deploy
+        run: make k8s-deploy NAMESPACE=${{ env.NAMESPACE }}
 

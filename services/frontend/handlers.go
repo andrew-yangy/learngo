@@ -25,6 +25,7 @@ func (fe *frontendServer) homeHandler(c *gin.Context) {
 			{Title: "Task 2", Done: true},
 			{Title: "Task 3", Done: true},
 			{Title: "Task 4", Done: true},
+			{Title: "Task 5", Done: true},
 		},
 	}
 

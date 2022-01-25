@@ -24,9 +24,9 @@ image-push:
 k8s-deploy:
 	helm upgrade frontend k8s \
 		--values k8s/values.frontend.yaml \
-		--namespace learngo \
+		--namespace $(NAMESPACE) \
 		--install --atomic --cleanup-on-fail
 	helm upgrade order k8s \
 		--values k8s/values.order.yaml \
-		--namespace learngo \
+		--namespace $(NAMESPACE) \
 		--install --atomic --cleanup-on-fail
