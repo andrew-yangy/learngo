@@ -48,7 +48,7 @@ spec:
       serviceAccountName: order
       containers:
         - name: order
-          image: order
-          imagePullPolicy: IfNotPresent #Always
+          image: 270878775604.dkr.ecr.us-east-2.amazonaws.com/order:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080

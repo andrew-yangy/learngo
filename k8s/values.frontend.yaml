@@ -1,0 +1,5 @@
+image:
+  repository: 270878775604.dkr.ecr.us-east-2.amazonaws.com/frontend
+  tag: latest
+  pullPolicy: Always
+  containerPort: 3000

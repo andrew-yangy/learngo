@@ -44,8 +44,8 @@ spec:
       serviceAccountName: frontend
       containers:
         - name: frontend
-          image: frontend
-          imagePullPolicy: IfNotPresent #Always
+          image: 270878775604.dkr.ecr.us-east-2.amazonaws.com/frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           env:

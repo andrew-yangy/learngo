@@ -31,18 +31,7 @@ jobs:
         run: |
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
 
-      - name: Push latest image to ECR
-        uses: hiberbee/github-action-skaffold@1.14.0
-        with:
-          command: run
-          repository: ${{ steps.login-ecr.outputs.registry }}
-          tag: ${{ github.sha }}
-          namespace: ${{ env.NAMESPACE }}
+      - name: Deploy
+        run: |
+          make k8s-deploy
 
-      - name: Tag image to latest
-        uses: hiberbee/github-action-skaffold@1.14.0
-        with:
-          command: run
-          repository: ${{ steps.login-ecr.outputs.registry }}
-          tag: latest
-          namespace: ${{ env.NAMESPACE }}

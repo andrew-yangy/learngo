@@ -1,0 +1,12 @@
+region: us-east-2
+
+replicaCount: 1
+
+service:
+  ports:
+    http: 80
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::270878775604:role/learngo-stage-eks-irsa
+    eks.amazonaws.com/sts-regional-endpoints: "true"
+
+imagePullSecrets: ecr-secret
