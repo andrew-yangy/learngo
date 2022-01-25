@@ -15,7 +15,7 @@ gazelle: gazelle-repos
 
 .PHONY: build
 build: gazelle
-	bazel build //...
+	bazel build //services/...
 
 go-setup: dep-ensure gazelle
 
