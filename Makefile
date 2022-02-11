@@ -1,5 +1,6 @@
 TAG = latest
 NAMESPACE = learngo
+functions := $(shell find functions -name \*main.go | awk -F'/' '{print $$2}')
 
 clean:
 	bazel clean --expunge
@@ -13,9 +14,16 @@ gazelle-repos:
 gazelle: gazelle-repos
 	bazel run //:gazelle
 
-.PHONY: build
-build: gazelle
+build-services: gazelle
 	bazel build //services/...
+
+build-functions:
+	@for function in $(functions) ; do \
+		env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/$$function functions/$$function/main.go ; \
+	done
+
+.PHONY: build
+build: build-services build-functions
 
 go-setup: dep-ensure gazelle
 
@@ -32,3 +40,6 @@ k8s-deploy:
 		--values k8s/values.order.yaml \
 		--namespace $(NAMESPACE) \
 		--install --atomic --cleanup-on-fail
+
+lambda-deploy:
+	serverless deploy

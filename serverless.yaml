@@ -1,0 +1,74 @@
+org: ddvkid
+app: learngo
+service: learngo
+
+frameworkVersion: '2 || 3'
+
+provider:
+  name: aws
+  runtime: go1.x
+  region: us-east-2
+  iam:
+    role: LambdaRole
+
+plugins:
+  - serverless-offline
+
+custom:
+  DB_NAME: learngo
+  USERNAME: master
+  PASSWORD: password
+  AURORA:
+    HOST:
+      Fn::GetAtt: [AuroraRDSCluster, Endpoint.Address]
+    PORT:
+      Fn::GetAtt: [AuroraRDSCluster, Endpoint.Port]
+    VPC_CIDR: 10
+  POSTGRESQL:
+    HOST:
+      Fn::GetAtt: [PostgreSqlRDSInstance, Endpoint.Address]
+    PORT:
+      Fn::GetAtt: [PostgreSqlRDSInstance, Endpoint.Port]
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+  individually: true
+
+functions:
+  user:
+    handler: bin/user
+    events:
+      - http:
+          path: /
+          method: get
+  user-register:
+    handler: bin/registration
+    events:
+      - http:
+          path: /
+          method: get
+
+resources:
+  Resources:
+    LambdaRole: ${file(./resource/LambdaRole.yml)}
+    ServerlessInternetGateway: ${file(./resource/ServerlessInternetGateway.yml)}
+    ServerlessVPC: ${file(./resource/ServerlessVPC.yml)}
+    ServerlessVPCGA: ${file(./resource/ServerlessVPCGA.yml)}
+    ServerlessSubnetA: ${file(./resource/ServerlessSubnetA.yml)}
+    ServerlessSubnetB: ${file(./resource/ServerlessSubnetB.yml)}
+    ServerlessSubnetGroup: ${file(./resource/ServerlessSubnetGroup.yml)}
+    ServerlessSecurityGroup: ${file(./resource/ServerlessSecurityGroup.yml)}
+    RouteTablePublic: ${file(./resource/RouteTablePublic.yml)}
+    RoutePublic: ${file(./resource/RoutePublic.yml)}
+    RouteTableAssociationSubnetA: ${file(./resource/RouteTableAssociationSubnetA.yml)}
+    RouteTableAssociationSubnetB: ${file(./resource/RouteTableAssociationSubnetB.yml)}
+
+#    AuroraRDSClusterParameter: ${file(./resource/AuroraRDSClusterParameter.yml)}
+#    AuroraRDSInstanceParameter: ${file(./resource/AuroraRDSInstanceParameter.yml)}
+#    AuroraRDSCluster: ${file(./resource/AuroraRDSCluster.yml)}
+#    AuroraRDSInstance: ${file(./resource/AuroraRDSInstance.yml)}
+
+    PostgreSqlRDSInstance: ${file(./resource/PostgreSqlRDSInstance.yml)}
