@@ -28,3 +28,12 @@ func (s Source) InsertAccount(ctx context.Context, account *storage.Account) (ui
 	}
 	return id, nil
 }
+
+func (s Source) ListStarkKeys(ctx context.Context, etherKey string) ([]string, error) {
+	var starkKeys []string
+	query := `SELECT stark_key FROM accounts WHERE ether_key = $1`
+	if err := s.SelectContext(ctx, &starkKeys, query, etherKey); err != nil {
+		return nil, err
+	}
+	return starkKeys, nil
+}

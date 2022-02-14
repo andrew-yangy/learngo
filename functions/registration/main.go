@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/ddvkid/learngo/controllers/userregistration"
@@ -31,20 +30,7 @@ func handle(ctx context.Context, req events.APIGatewayProxyRequest, s storage.St
 		}, nil
 	}
 	resp, err := userregistration.Register(ctx, s, registerReq)
-	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
-	}
-	body, err := json.Marshal(resp)
-	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
-	}
-	return events.APIGatewayProxyResponse{
-		StatusCode: http.StatusOK,
-		Body:       string(body),
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
-	}, nil
+	return util.EncodeLambdaResponse(resp, err)
 }
 
 func main() {

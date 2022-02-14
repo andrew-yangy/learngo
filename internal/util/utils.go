@@ -3,8 +3,10 @@ package util
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
+	"net/http"
 	"runtime/debug"
 	"strings"
 )
@@ -16,6 +18,21 @@ type ErrResponse struct {
 func DecodeRequest(req string, dest interface{}) error {
 	if err := json.Unmarshal([]byte(req), &dest); err != nil {
 		return fmt.Errorf("Cannot decode json: %w", err)
+	}
+	return nil
+}
+
+func DecodeResponse(res string, dest interface{}) error {
+	var er V1EngineResponse
+	if err := json.Unmarshal([]byte(res), &er); err != nil {
+		return err
+	}
+	bytes, err := json.Marshal(er.Result)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(bytes, &dest); err != nil {
+		return err
 	}
 	return nil
 }
@@ -54,4 +71,60 @@ func HandlePanic(logEntry *logrus.Entry, cb func(interface{})) {
 			cb(r)
 		}
 	}
+}
+
+func InternalError(err error) (events.APIGatewayProxyResponse, error) {
+	return events.APIGatewayProxyResponse{
+		StatusCode: http.StatusInternalServerError,
+		Body:       InternalApiError(err).Error(),
+	}, nil
+}
+
+type V1EngineResponse struct {
+	Message string      `json:"message"`
+	Code    int         `json:"code"`
+	Result  interface{} `json:"result"`
+}
+
+func EncodeLambdaError(err error) (events.APIGatewayProxyResponse, error) {
+	// Handle error cases
+	apiError, ok := err.(*APIError)
+	if ok {
+		return EncodeError(apiError)
+	}
+	return InternalError(err)
+}
+
+func EncodeLambdaResponse(resp interface{}, err error) (events.APIGatewayProxyResponse, error) {
+	if err != nil {
+		return EncodeLambdaError(err)
+	}
+
+	// No error; handle response
+	var v1 V1EngineResponse
+	v1.Result = resp
+
+	body, err := json.Marshal(v1)
+	if err != nil {
+		return InternalError(err)
+	}
+	return events.APIGatewayProxyResponse{
+		StatusCode: http.StatusOK,
+		Body:       string(body),
+		Headers: map[string]string{
+			"Content-Type": "application/json",
+		},
+	}, nil
+}
+
+func EncodeError(apiError *APIError) (events.APIGatewayProxyResponse, error) {
+	body, err := json.Marshal(apiError)
+	if err != nil {
+		return InternalError(err)
+	}
+
+	return events.APIGatewayProxyResponse{
+		StatusCode: apiError.StatusCode,
+		Body:       string(body),
+	}, nil
 }

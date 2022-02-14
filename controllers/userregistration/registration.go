@@ -2,6 +2,7 @@ package userregistration
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/ddvkid/learngo/internal/storage"
 )
 
@@ -50,26 +51,26 @@ type RegistrationBody struct {
 
 func Layer2Registration(ctx context.Context, store storage.Store, account *storage.Account) error {
 	return storage.InTx(ctx, store, func(tx storage.Tx) error {
-		_, err := tx.InsertAccount(ctx, account)
+		id, err := tx.InsertAccount(ctx, account)
 		if err != nil {
 			return err
 		}
 
-		// insert registration event for snapshot service to keep track of accounts
-		//body, err := json.Marshal(RegistrationBody{StarkKey: account.StarkKey, EtherKey: account.EtherKey})
-		//if err != nil {
-		//	return err
-		//}
-		//_, err = tx.InsertEvent(ctx, &storage.Event{
-		//	Type:    storage.RegistrationType,
-		//	Status:  storage.AcceptedStatus, // placeholder - db complains if status not set
-		//	RefID:   int64(id),
-		//	BatchID: -1,
-		//	Body:    body,
-		//})
-		//if err != nil {
-		//	return err
-		//}
+		//insert registration event for snapshot service to keep track of accounts
+		body, err := json.Marshal(RegistrationBody{StarkKey: account.StarkKey, EtherKey: account.EtherKey})
+		if err != nil {
+			return err
+		}
+		_, err = tx.InsertEvent(ctx, &storage.Event{
+			Type:    storage.RegistrationType,
+			Status:  storage.AcceptedStatus, // placeholder - db complains if status not set
+			RefID:   int64(id),
+			BatchID: -1,
+			Body:    body,
+		})
+		if err != nil {
+			return err
+		}
 
 		return nil
 	})

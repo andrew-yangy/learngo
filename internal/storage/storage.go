@@ -7,6 +7,7 @@ import (
 
 type Source interface {
 	InsertAccount(ctx context.Context, account *Account) (uint64, error)
+	ListStarkKeys(ctx context.Context, etherKey string) ([]string, error)
 	InsertEvent(ctx context.Context, e *Event) (uint64, error)
 }
 
