@@ -1,1 +1,1 @@
-common --define=TAG=latest
+query --package_path %workspace%:/usr/local/bin/bazel/base_workspace
