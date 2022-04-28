@@ -21,19 +21,20 @@ jobs:
             const startTime = new Date(context.payload.workflow_run.run_started_at).getTime();
             const endTime = new Date(context.payload.workflow_run.updated_at).getTime();
             const duration = (endTime - startTime)/60000;
-            console.log(context.payload.repository);
-            console.log(context.payload.workflow_run);
-            console.log(startTime);
-            console.log(endTime);
-            console.log(duration);
+            
             await axios({
               method: 'post',
               url: 'https://insights-collector.newrelic.com/v1/accounts/3141644/events',
               data: [{
                   eventType: 'ReleaseEvents',
+                  repo: context.payload.repository?.name || '',
+                  branch: context.payload.workflow_run?.head_branch || '',
+                  workflow: context.payload.workflow_run?.name || '',
+                  conclusion: context.payload.workflow_run?.conclusion || '',
+                  url: context.payload.workflow_run?.html_url || '',
                   duration: duration
               }],
               headers: {
-                  'Api-Key': '${{ secrets.NEW_RELIC_LICENSE }}'
+                  'Api-Key': ${{ secrets.NEW_RELIC_LICENSE }}
               }
             });
