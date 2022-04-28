@@ -1,0 +1,40 @@
+name: Collecting workflow metrics
+
+on:
+  workflow_run:
+    workflows: [Main branch CI/CD, PR CI/CD]
+    types:
+      - completed
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm i axios
+      - name: Collect PR workflow metrics
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const axios = require('axios').default;
+            console.log(context);
+            const startTime = new Date(context.payload.workflow_run.run_started_at).getTime();
+            const endTime = new Date(context.payload.workflow_run.updated_at).getTime();
+            const duration = (endTime - startTime)/60000;
+            
+            await axios({
+              method: 'post',
+              url: 'https://insights-collector.newrelic.com/v1/accounts/3141644/events',
+              data: [{
+                  eventType: 'ReleaseEvents',
+                  repo: context.payload.repository?.name || '',
+                  branch: context.payload.workflow_run?.head_branch || '',
+                  workflow: context.payload.workflow_run?.name || '',
+                  conclusion: context.payload.workflow_run?.conclusion || '',
+                  url: context.payload.workflow_run?.html_url || '',
+                  duration: duration
+              }],
+              headers: {
+                  'Api-Key': ${{ secrets.NEW_RELIC_LICENSE }}
+              }
+            });
