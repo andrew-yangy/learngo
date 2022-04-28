@@ -2,7 +2,7 @@ name: Collecting workflow metrics
 
 on:
   workflow_run:
-    workflows: [Main branch CI/CD, PR CI/CD]
+    workflows: [Build and Deploy]
     types:
       - completed
 
