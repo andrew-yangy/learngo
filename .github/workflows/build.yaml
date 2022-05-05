@@ -14,7 +14,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    environment: stage
     steps:
       - uses: actions/checkout@v2
       - name: Configure AWS credentials
