@@ -1,0 +1,17 @@
+name: Release
+
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout [main]
+        with:
+          fetch-depth: 0
+      - uses: hmarr/debug-action@v2
