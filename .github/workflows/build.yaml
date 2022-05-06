@@ -26,6 +26,16 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - uses: octokit/request-action@v2.x
+        id: get_latest_release
+        with:
+          route: GET /repos/{owner}/{repo}/releases/latest
+          owner: andrew-yangy
+          repo: learngo
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - run: "echo latest release: ${{ steps.get_latest_release.outputs.data }}"
+
 #      - name: Update kubeconfig
 #        run: |
 #          aws eks update-kubeconfig \
