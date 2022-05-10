@@ -1,0 +1,24 @@
+name: 'Create draft release'
+description: 'Create draft release in Github.'
+inputs:
+  token:
+    description: 'Github repository token'
+    required: false
+    default: ${{ github.token }}
+  action:
+    description: "create | publish"
+    required: false
+    default: "create"
+  level:
+    description: "major | minor | patch"
+    required: false
+    default: "patch"
+  nrLicense:
+    description: "NEW_RELIC_LICENSE"
+    required: false
+  slack:
+    description: 'Slack webhook'
+    required: false
+runs:
+  using: 'node16'
+  main: 'index.js'

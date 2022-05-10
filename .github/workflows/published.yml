@@ -14,3 +14,5 @@ jobs:
         with:
           fetch-depth: 0
       - uses: hmarr/debug-action@v2
+      - name: Manage Draft releases
+        uses: ./.github/actions/draft-release
