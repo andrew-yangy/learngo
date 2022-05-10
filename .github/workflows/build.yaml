@@ -16,25 +16,25 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v2
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - run: npm i axios
+      - name: Collect PR workflow metrics
+        uses: actions/github-script@v6
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+          script: |
+            const axios = require('axios').default;
 
-      - uses: octokit/request-action@v2.x
-        id: get_latest_release
-        with:
-          route: GET /repos/{owner}/{repo}/releases/latest
-          owner: andrew-yangy
-          repo: learngo
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-      - run: "echo latest release: ${{ steps.get_latest_release.outputs.data }}"
+            await axios({
+              method: 'post',
+              url: 'https://insights-collector.newrelic.com/v1/accounts/3141644/events',
+              data: [{
+                  eventType: 'ReleasePublishEvents',
+                  repo: 'imx-engine',
+                  tag: 'test'
+              }],
+              headers: {
+                  'Api-Key': '${{ secrets.NEW_RELIC_LICENSE }}'
+              }
+            });
 
 #      - name: Update kubeconfig
 #        run: |
